@@ -5,16 +5,20 @@ import CreateIcon from "@mui/icons-material/Create";
 import InsertCommentIcon from "@mui/icons-material/InsertComment"; // import InboxIcon from "@mui/icons-material/Inbox";
 import InboxIcon from "@mui/icons-material/Inbox"; // import InboxIcon from "@mui/icons-material/Inbox";
 
-import SidebarOption from "./SidebarOptionContainer";
+import SidebarOption from "./SidebarOption";
 import DraftsIcon from "@mui/icons-material/Drafts";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import AppsIcon from "@mui/icons-material/Apps";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import AddIcon from "@mui/icons-material/Add";
+
 const Sidebar = () => {
     return (
         <SidebarContainer>
+            <hr className="hr"/>
             <SidebarHeader>
                 <SidebarInfo>
                     <h2>project-test workspace</h2>
@@ -31,6 +35,7 @@ const Sidebar = () => {
                 </SidebarInfo>
                 <CreateIcon fontSize='small' />
             </SidebarHeader>
+            <hr />
             <SidebarOption Icon={InsertCommentIcon} title='Threads' />
             <SidebarOption Icon={InboxIcon} title='Mentions & reactions' />
             <SidebarOption Icon={DraftsIcon} title='Saved items' />
@@ -39,6 +44,10 @@ const Sidebar = () => {
             <SidebarOption Icon={AppsIcon} title='Apps' />
             <SidebarOption Icon={FileCopyIcon} title='File browser' />
             <SidebarOption Icon={ExpandLessIcon} title='Show less' />
+            <hr />
+            <SidebarOption Icon={ExpandMoreIcon} title='Channels' />
+            <hr />
+            <SidebarOption Icon={AddIcon} title='Add Channel' addChannelOption />
         </SidebarContainer>
     );
 };
@@ -46,21 +55,26 @@ const Sidebar = () => {
 export default Sidebar;
 
 const SidebarContainer = styled.div`
-    flex : 0.37;
-    max-width : 270px;
+    flex: 0.37;
+    max-width: 270px;
     color: white;
     background-color: var(--slack-color);
-    /* position: fixed; */
+    position: fixed;
     height: 100%;
     /* padding: 0 1em; */
-     margin-top: 3em;
+    margin-top: 3em;
     > * {
         padding: 0.4em 1em;
-    } 
+    }
+    > hr {
+        margin : 0.6em 0;
+        padding: 0;
+        border: 1px solid #49274b;
+    }
 `;
 const SidebarHeader = styled.div`
-    border-top: 1px solid violet;
-    border-bottom: 1px solid violet;
+    /* border-top: 1px solid violet;
+    border-bottom: 1px solid violet; */
     margin: 0.4em 0;
     padding: 0.5em 0;
     display: flex;
