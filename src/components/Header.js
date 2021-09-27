@@ -43,6 +43,7 @@ const HeaderContainer = styled.div`
     justify-content: space-between;
     color: white;
     position: fixed;
+    padding : 0.3em 0;
 `;
 
 // left part of the header
