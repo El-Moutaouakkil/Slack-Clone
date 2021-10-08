@@ -1,21 +1,16 @@
 import React from "react";
 import styled from "styled-components";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import addChannel from "../utilities/channelManager";
 
-const SidebarOption = ({ Icon, title, addChannelOption}) => {
-   
-   const addChannel = () => {
-       
-   }
-   const selectChannel = () => {
-       
-   };
-   
-   
+const SidebarOption = ({ Icon, title, addChannelOption }) => {
+    
+    const selectChannel = () => {};
+
     return (
-        
         <SidebarOptionContainer
-            onClick={addChannelOption ? addChannel : selectChannel}
-        >
+            onClick={addChannelOption ? addChannel : selectChannel}>
             {Icon ? (
                 <>
                     <Icon fontSize='small' /> <h5>{title}</h5>{" "}
@@ -33,10 +28,6 @@ export default SidebarOption;
 
 const SidebarOptionContainer = styled.div`
     display: flex;
-    /* justify-content: space-between; */
-    /* margin: 0.7em 0.3em; */
-    /* padding : 0.5em 0em; */
-    /* margin-left: 0.5em; */
     padding: 0.6em 1em;
     cursor: pointer;
     > h5 {

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { nanoid } from "nanoid";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import CreateIcon from "@mui/icons-material/Create";
 import InsertCommentIcon from "@mui/icons-material/InsertComment"; // import InboxIcon from "@mui/icons-material/Inbox";
@@ -14,11 +15,28 @@ import FileCopyIcon from "@mui/icons-material/FileCopy";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from "@mui/icons-material/Add";
+import { db } from "../firebase";
+import { getChannels } from "../utilities/channelManager";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 
 const Sidebar = () => {
+    //    const [isNewChannel, setIsNewChannel] = useState(false);
+    const [channels, setChannels] = useState([]);
+    useEffect(() => {
+        const getData = async () => {
+            const chs = [];
+            const querySnapshot = await getDocs(collection(db, "channels"));
+            querySnapshot.forEach((doc) => {
+                chs.push({ id: doc.id, name: doc.data().name });
+            });
+            console.log(chs);
+            setChannels([...chs]);
+        };
+        getData();
+    }, []);
     return (
         <SidebarContainer>
-            <hr className="hr"/>
+            <hr className='hr' />
             <SidebarHeader>
                 <SidebarInfo>
                     <h2>project-test workspace</h2>
@@ -47,7 +65,18 @@ const Sidebar = () => {
             <hr />
             <SidebarOption Icon={ExpandMoreIcon} title='Channels' />
             <hr />
-            <SidebarOption Icon={AddIcon} title='Add Channel' addChannelOption />
+            <SidebarOption
+                // onClick={addChannel}           
+                Icon={AddIcon}
+                title='Add Channel'
+                addChannelOption
+            />
+
+            <ul>
+                {channels?.map((channel) => (
+                    <SidebarOption key={channel.id} title={channel.name} />
+                ))}
+            </ul>
         </SidebarContainer>
     );
 };
@@ -59,22 +88,36 @@ const SidebarContainer = styled.div`
     max-width: 270px;
     color: white;
     background-color: var(--slack-color);
-    position: fixed;
+    /* position: fixed; */
     height: 100%;
-    /* padding: 0 1em; */
     margin-top: 3em;
+    overflow-y: scroll;
     > * {
         padding: 0.4em 1em;
     }
     > hr {
-        margin : 0.6em 0;
+        margin: 0.6em 0;
         padding: 0;
         border: 1px solid #49274b;
     }
+    /* Scrollbar style  */
+    ::-webkit-scrollbar {
+        width: 2vw;
+    }
+
+    ::-webkit-scrollbar-track {
+        box-sizing: content-box;
+        box-shadow: inset 0 0 10px 10px var(--slack-color);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        box-shadow: inset 0 0 10px 10px gray;
+        border: solid 4px transparent;
+        border-radius: 50px;
+    }
+    /* Scrollbar style END */
 `;
 const SidebarHeader = styled.div`
-    /* border-top: 1px solid violet;
-    border-bottom: 1px solid violet; */
     margin: 0.4em 0;
     padding: 0.5em 0;
     display: flex;
