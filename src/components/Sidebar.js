@@ -1,39 +1,43 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { nanoid } from "nanoid";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import CreateIcon from "@mui/icons-material/Create";
-import InsertCommentIcon from "@mui/icons-material/InsertComment"; // import InboxIcon from "@mui/icons-material/Inbox";
-import InboxIcon from "@mui/icons-material/Inbox"; // import InboxIcon from "@mui/icons-material/Inbox";
-
-import SidebarOption from "./SidebarOption";
-import DraftsIcon from "@mui/icons-material/Drafts";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import AddIcon from "@mui/icons-material/Add";
 import AppsIcon from "@mui/icons-material/Apps";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import CreateIcon from "@mui/icons-material/Create";
+import DraftsIcon from "@mui/icons-material/Drafts";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AddIcon from "@mui/icons-material/Add";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import InboxIcon from "@mui/icons-material/Inbox"; // import InboxIcon from "@mui/icons-material/Inbox";
+import InsertCommentIcon from "@mui/icons-material/InsertComment"; // import InboxIcon from "@mui/icons-material/Inbox";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import {
+    collection, onSnapshot, query
+} from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { db } from "../firebase";
-import { getChannels } from "../utilities/channelManager";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import SidebarOption from "./SidebarOption";
+
 
 const Sidebar = () => {
     //    const [isNewChannel, setIsNewChannel] = useState(false);
-    const [channels, setChannels] = useState([]);
+    const [chs, setChannels] = useState([]);
     useEffect(() => {
         const getData = async () => {
-            const chs = [];
-            const querySnapshot = await getDocs(collection(db, "channels"));
-            querySnapshot.forEach((doc) => {
-                chs.push({ id: doc.id, name: doc.data().name });
+            const q = query(collection(db, "channels"));
+            const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                const chs = [];
+                querySnapshot.docs.map((doc) => {
+                    chs.push({ id: doc.id, name: doc.data().name });
+                });
+                console.log(chs);
+                setChannels([...chs]);
             });
-            console.log(chs);
-            setChannels([...chs]);
+            return unsubscribe;
         };
         getData();
     }, []);
+
     return (
         <SidebarContainer>
             <hr className='hr' />
@@ -66,17 +70,21 @@ const Sidebar = () => {
             <SidebarOption Icon={ExpandMoreIcon} title='Channels' />
             <hr />
             <SidebarOption
-                // onClick={addChannel}           
+                // onClick={addChannel}
                 Icon={AddIcon}
                 title='Add Channel'
                 addChannelOption
             />
 
-            <ul>
-                {channels?.map((channel) => (
-                    <SidebarOption key={channel.id} title={channel.name} />
+            <>
+                {chs?.map((channel) => (
+                    <SidebarOption
+                        key={channel.id}
+                        id={channel.id}
+                        title={channel.name}
+                    />
                 ))}
-            </ul>
+            </>
         </SidebarContainer>
     );
 };
@@ -84,7 +92,9 @@ const Sidebar = () => {
 export default Sidebar;
 
 const SidebarContainer = styled.div`
-    flex: 0.37;
+    font-size: 0.9em;
+    font-weight: 100;
+    flex: 0.4;
     max-width: 270px;
     color: white;
     background-color: var(--slack-color);
@@ -100,14 +110,15 @@ const SidebarContainer = styled.div`
         padding: 0;
         border: 1px solid #49274b;
     }
+
     /* Scrollbar style  */
     ::-webkit-scrollbar {
-        width: 2vw;
+        width: 0.8em;
     }
 
     ::-webkit-scrollbar-track {
         box-sizing: content-box;
-        box-shadow: inset 0 0 10px 10px var(--slack-color);
+        box-shadow: inset 0 0 20px 10px var(--slack-color);
     }
 
     ::-webkit-scrollbar-thumb {
@@ -115,6 +126,7 @@ const SidebarContainer = styled.div`
         border: solid 4px transparent;
         border-radius: 50px;
     }
+
     /* Scrollbar style END */
 `;
 const SidebarHeader = styled.div`

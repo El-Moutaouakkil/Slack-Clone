@@ -1,12 +1,20 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { enterChannel } from "../features/appSlice";
 import addChannel from "../utilities/channelManager";
 
-const SidebarOption = ({ Icon, title, addChannelOption }) => {
-    
-    const selectChannel = () => {};
+const SidebarOption = ({ Icon, title, addChannelOption, id }) => {
+    const dispatch = useDispatch();
+    const selectChannel = () => {
+        if (id) {
+            dispatch(
+                enterChannel({
+                    channelId: id,
+                })
+            );
+        }
+    };
 
     return (
         <SidebarOptionContainer
@@ -42,12 +50,18 @@ const SidebarOptionContainer = styled.div`
         background-color: #370638;
         opacity: 0.9;
     }
+
+    :last-child {
+        margin-bottom: 2em;
+    }
 `;
 const SidebarOptionChannel = styled.div`
+    padding: 0;
     display: flex;
+    justify-content: space-around;
     justify-content: space-between;
     span {
-        font-weight: bold;
+        /* font-weight: bold; */
     }
     > h5 {
         margin-left: 1.5em;
