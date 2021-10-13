@@ -1,17 +1,12 @@
 import Button from "@mui/material/Button";
-import {
-    addDoc,
-    collection,
-    getDoc,
-    getDocs,
-    query,
-    serverTimestamp,
-} from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import React, { useRef } from "react";
 import styled from "styled-components";
 import { db } from "../firebase";
 
-function ChatInput({ channelId, channelName }) {
+function ChatInput({ channelId, channelName, chatBottomRef }) {
+    console.log("channel id => ", channelId);
+    console.log("channel name => ", channelName);
     const inputRef = useRef(null);
 
     const sendMessage = async (e) => {
@@ -32,18 +27,9 @@ function ChatInput({ channelId, channelName }) {
                 timestamp: serverTimestamp(),
             });
             inputRef.current.value = null;
-            /*  */
-            const docSnap = await getDocs(messagesCollectionRef);
-
-            const q = query(messagesCollectionRef);
-            const querySnapshot = await getDocs(q);
-            const messages = querySnapshot.docs.map((doc) => ({
-                id: doc.id,
-                message: doc.data(),
-            }));
-            console.log(messages);
-
-            /*  */
+            chatBottomRef?.current?.scrollIntoView({
+                behavior: "smooth",
+            });
         } catch (e) {
             console.error("Error adding document: ", e);
         }
@@ -56,7 +42,9 @@ function ChatInput({ channelId, channelName }) {
                 <input
                     ref={inputRef}
                     type='text'
-                    placeholder={`Message #Room`}
+                    placeholder={`Message #${
+                        channelName ? channelName : "general"
+                    }`}
                 />
                 <Button hidden type='submit' onClick={sendMessage}>
                     SEND
@@ -67,6 +55,7 @@ function ChatInput({ channelId, channelName }) {
 }
 
 export default ChatInput;
+// export messages;
 const ChatInputContainer = styled.div`
     form {
         width: 100%;

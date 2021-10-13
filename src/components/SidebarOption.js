@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { enterChannel } from "../features/appSlice";
@@ -6,7 +6,10 @@ import addChannel from "../utilities/channelManager";
 
 const SidebarOption = ({ Icon, title, addChannelOption, id }) => {
     const dispatch = useDispatch();
-    const selectChannel = () => {
+    const [color, setColor] = useState(false);
+    const selectChannel = (e) => {
+        // e.target.style.background = "#9932CC";
+
         if (id) {
             dispatch(
                 enterChannel({

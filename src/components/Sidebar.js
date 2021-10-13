@@ -30,7 +30,7 @@ const Sidebar = () => {
                 querySnapshot.docs.map((doc) => {
                     chs.push({ id: doc.id, name: doc.data().name });
                 });
-                console.log(chs);
+                // console.log(chs);
                 setChannels([...chs]);
             });
             return unsubscribe;
