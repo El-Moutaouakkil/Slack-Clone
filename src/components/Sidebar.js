@@ -11,7 +11,7 @@ import InboxIcon from "@mui/icons-material/Inbox"; // import InboxIcon from "@mu
 import InsertCommentIcon from "@mui/icons-material/InsertComment"; // import InboxIcon from "@mui/icons-material/Inbox";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import {
-    collection, onSnapshot, query
+    collection, onSnapshot, orderBy, query
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -24,7 +24,7 @@ const Sidebar = () => {
     const [chs, setChannels] = useState([]);
     useEffect(() => {
         const getData = async () => {
-            const q = query(collection(db, "channels"));
+            const q = query(collection(db, "channels"), orderBy("timestamp"));
             const unsubscribe = onSnapshot(q, (querySnapshot) => {
                 const chs = [];
                 querySnapshot.docs.map((doc) => {

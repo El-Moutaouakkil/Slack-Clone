@@ -7,11 +7,11 @@ import { db } from "../firebase";
 function ChatInput({ channelId, channelName, chatBottomRef }) {
     console.log("channel id => ", channelId);
     console.log("channel name => ", channelName);
-    const inputRef = useRef(null);
+    const inputRef = useRef("");
 
     const sendMessage = async (e) => {
         e.preventDefault(); //Prevent refresh
-        if (!channelId) {
+        if (!channelId || inputRef.current.value === "") {
             return false;
         }
         const messagesCollectionRef = collection(
@@ -26,7 +26,7 @@ function ChatInput({ channelId, channelName, chatBottomRef }) {
                 user: "E.M Mohammed",
                 timestamp: serverTimestamp(),
             });
-            inputRef.current.value = null;
+            inputRef.current.value = "";
             chatBottomRef?.current?.scrollIntoView({
                 behavior: "smooth",
             });

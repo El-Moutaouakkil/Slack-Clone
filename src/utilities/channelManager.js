@@ -1,4 +1,9 @@
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import {
+    collection,
+    getDocs,
+    addDoc,
+    serverTimestamp,
+} from "firebase/firestore";
 import { db } from "../firebase";
 
 const addChannel = async () => {
@@ -7,6 +12,7 @@ const addChannel = async () => {
     try {
         const docRef = await addDoc(collection(db, "channels"), {
             name: channelName,
+            timestamp: serverTimestamp(),
         });
         console.log("Document written with ID: ", docRef.id);
     } catch (e) {
